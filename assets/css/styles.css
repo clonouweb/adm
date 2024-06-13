@@ -17,7 +17,7 @@ body {
 }
 
 .custom-input {
-    background-color: #112D34; /* Cor de fundo dos campos de input */
+    background-color: #ccd1d3; /* Cor de fundo dos campos de input */
     border: none; /* Remove borda dos campos de input */
     border-radius: 10px; /* Borda arredondada dos campos de input */
     color: #ffffff; /* Cor do texto dos campos de input */
