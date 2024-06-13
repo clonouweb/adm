@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zap Money - Painel de Controle</title>
+  <link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel=icon href="/assets/img/icon.svg" sizes=32x32>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1f2937, #4b5563);
+      font-family: 'Roboto', sans-serif;
+      color: white;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+      font-size: 1.25rem;
+      margin-bottom: 15px;
+    }
+    .btn-primary {
+      background-color: #3b82f6;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #2563eb;
+    }
+    .btn-secondary {
+      background-color: #6b7280;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background-color: #4b5563;
+    }
+    .generated-info {
+      margin-top: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      border-radius: 5px;
+    }
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      color: #9ca3af;
+    }
+    .icon {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl font-bold text-center mb-8">Painel de Controle - Zap Money</h1>
+    
+    <div class="card mb-8">
+      <div class="card-header flex items-center">
+        <svg class="icon w-6 h-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2-1.343-2-3-2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20c-1.657 0-3-.895-3-2s1.343-2 3-2 3 .895 3 2-1.343 2-3 2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4a4 4 0 100 8 4 4 0 000-8zm0 16a4 4 0 100-8 4 4 0 000 8z"/></svg>
+        Gerar Chave de Ativação
+      </div>
+      <div class="card-body">
+        <form id="generateKeyForm">
+          <button type="submit" class="btn-primary">Gerar Chave</button>
+        </form>
+        <p class="mt-3">Chave de Ativação: <span id="activationKey" class="font-bold"></span></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header flex items-center">
+        <svg class="icon w-6 h-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12V8a4 4 0 10-8 0v4"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 16h-1a4 4 0 00-4-4H9a4 4 0 00-4 4H4m16 0v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6m16 0H4"/></svg>
+        Gerar Email e Senha
+      </div>
+      <div class="card-body">
+        <form id="generateCredentialsForm">
+          <div class="form-group mb-4">
+            <label for="username" class="block mb-2">Nome de Usuário:</label>
+            <input type="text" id="username" class="form-control w-full p-2 rounded" required>
+          </div>
+          <button type="submit" class="btn-primary">Gerar Credenciais</button>
+        </form>
+        <div class="generated-info mt-4">
+          <p>Email Gerado: <span id="generatedEmail" class="font-bold"></span></p>
+          <p>Senha Gerada: <span id="generatedPassword" class="font-bold"></span></p>
+          <button id="copyCredentials" class="btn-secondary mt-2">Copiar Credenciais</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Zap Money Chat</p>
+  </footer>
+
+  <!-- Import Firebase scripts -->
+<!-- Import Firebase scripts -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // Configuração do Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyD46ER3TfZJTAYs3LBZ-FmBdlpgsX7H29s",
+    authDomain: "zapvoice-19f1b.firebaseapp.com",
+    projectId: "zapvoice-19f1b",
+    storageBucket: "zapvoice-19f1b.appspot.com",
+    messagingSenderId: "665669355897",
+    appId: "1:665669355897:web:6089d5982f71ac9d2907a8"
+  };
+
+  // Inicialize o Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // Referência para o serviço de autenticação do Firebase
+  const auth = getAuth(app);
+
+  // Referência para o Firestore
+  const db = getFirestore(app);
+
+  // Função para gerar a chave de ativação
+  function generateActivationKey() {
+    // Lógica para gerar uma chave de ativação (exemplo simples)
+    return Math.random().toString(36).substr(2, 10);
+  }
+
+  // Função para gerar e salvar a chave de ativação
+  function generateAndSaveActivationKey() {
+    // Gerar a chave de ativação
+    const activationKey = generateActivationKey();
+
+    // Salvar a chave de ativação no Firestore
+    addDoc(collection(db, "activationKeys"), {
+      key: activationKey,
+      createdAt: new Date()
+    })
+    .then((docRef) => {
+      console.log("Chave de ativação salva com ID: ", docRef.id);
+      document.getElementById('activationKey').textContent = activationKey;
+    })
+    .catch((error) => {
+      console.error("Erro ao salvar chave de ativação: ", error);
+      alert("Erro ao salvar chave de ativação. Tente novamente mais tarde.");
+    });
+  }
+
+  // Evento de submit para o formulário de gerar chave de ativação
+  const generateKeyForm = document.getElementById('generateKeyForm');
+  generateKeyForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    generateAndSaveActivationKey();
+  });
+
+  // Evento de submit para o formulário de gerar credenciais
+  const generateCredentialsForm = document.getElementById('generateCredentialsForm');
+  generateCredentialsForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const generatedEmail = `${username}@brasilads.online`;
+    const generatedPassword = generateActivationKey(); // Geração de senha simples
+
+    // Criar usuário no Firebase Authentication
+    createUserWithEmailAndPassword(auth, generatedEmail, generatedPassword)
+      .then((userCredential) => {
+        // Limpar campos do formulário após criar usuário
+        generateCredentialsForm.reset();
+        
+        // Exibir email gerado e senha
+        document.getElementById('generatedEmail').textContent = generatedEmail;
+        document.getElementById('generatedPassword').textContent = generatedPassword;
+
+        alert('Usuário criado com sucesso no Firebase Authentication!');
+      })
+      .catch((error) => {
+        console.error('Erro ao criar usuário no Firebase Authentication:', error.message);
+        alert('Erro ao criar usuário. Verifique os dados e tente novamente.');
+      });
+  });
+
+  // Evento para copiar as credenciais
+  const copyCredentialsButton = document.getElementById('copyCredentials');
+  copyCredentialsButton.addEventListener('click', function() {
+    const email = document.getElementById('generatedEmail').textContent;
+    const password = document.getElementById('generatedPassword').textContent;
+    const credentialsText = `Email: ${email}\nSenha: ${password}`;
+    navigator.clipboard.writeText(credentialsText)
+      .then(() => {
+        alert('Credenciais copiadas para a área de transferência.');
+      })
+      .catch((error) => {
+        console.error('Erro ao copiar credenciais: ', error);
+        alert('Erro ao copiar credenciais. Por favor, copie manualmente.');
+      });
+  });
+</script>
+
+</body>
+</html>
