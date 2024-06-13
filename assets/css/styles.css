@@ -1,0 +1,46 @@
+body {
+    background-color: #105e68; /* Cor de fundo roxo metálico */
+    color: #ffffff; /* Cor do texto branco */
+    font-family: Arial, sans-serif; /* Fonte do texto */
+}
+
+.logo {
+    max-width: 300px; /* Tamanho máximo da logo */
+    margin-bottom: 20px; /* Espaçamento inferior da logo */
+}
+
+.custom-card {
+    background-color: #112D34; /* Cor de fundo do card */
+    border: none; /* Remove borda do card */
+    border-radius: 15px; /* Borda arredondada do card */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra do card */
+}
+
+.custom-input {
+    background-color: #112D34; /* Cor de fundo dos campos de input */
+    border: none; /* Remove borda dos campos de input */
+    border-radius: 10px; /* Borda arredondada dos campos de input */
+    color: #ffffff; /* Cor do texto dos campos de input */
+    font-size: 16px; /* Tamanho da fonte dos campos de input */
+    padding: 10px; /* Espaçamento interno dos campos de input */
+    transition: all 0.3s ease; /* Transição suave */
+}
+
+.custom-input:focus {
+    outline: none; /* Remove o outline ao focar nos campos de input */
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.5); /* Sombra ao focar nos campos de input */
+}
+
+.btn-primary {
+    background-color: #FFCC00; /* Cor de fundo do botão */
+    border: none; /* Remove borda do botão */
+    border-radius: 10px; /* Borda arredondada do botão */
+    font-size: 18px; /* Tamanho da fonte do botão */
+    padding: 12px; /* Espaçamento interno do botão */
+    transition: background-color 0.3s ease; /* Transição suave */
+}
+
+.btn-primary:hover {
+    background-color: #4697C4; /* Cor de fundo do botão ao passar o mouse */
+}
+
